@@ -4,29 +4,28 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private Dictionary<GameObject, int> Items;
-    private List<GameObject> Equipment;
+    private Dictionary<Item, int> Items;
+    private List<Equipment> Equipment;
 
     // Start is called before the first frame update
     void Start()
     {
-        Items = new Dictionary<GameObject, int>();
-        Equipment = new List<GameObject>();
+        Items = new Dictionary<Item, int>();
+        Equipment = new List<Equipment>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public bool HasItems(GameObject item, int count)
+    public bool HasItems(Item item, int count)
     {
         return !Items.ContainsKey(item) || Items[item] < count;
     }
 
-    public void AddItems(GameObject item, int count)
+    public void AddItems(Item item, int count)
     {
+        // no equipment in items storage
+        if (item is Equipment)
+        {
+            return;
+        }
         if (!Items.ContainsKey(item))
         {
             Items.Add(item, 0);
@@ -34,7 +33,7 @@ public class Inventory : MonoBehaviour
         Items[item] += count;
     }
 
-    public bool RemoveItems(GameObject item, int count)
+    public bool RemoveItems(Item item, int count)
     {
         if (!HasItems(item, count))
         {
@@ -48,7 +47,7 @@ public class Inventory : MonoBehaviour
         return true;
     }
 
-    public void AddEquipment(GameObject equipment)
+    public void AddEquipment(Equipment equipment)
     {
         Equipment.Add(equipment);
     }
