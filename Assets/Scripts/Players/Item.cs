@@ -6,7 +6,7 @@ public abstract class Item : MonoBehaviour
 {
 
     private string Name;
-    private int Type; // 0 = resource, 1 = consumable, 2 = equipment
+    private int Type; // 0 = resource, 1 = consumable, 2 = equipment, 3 = permanent item
     private Sprite Icon;
 
     public Item(string name, int type, Sprite icon)

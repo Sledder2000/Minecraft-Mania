@@ -6,12 +6,14 @@ public class Inventory : MonoBehaviour
 {
     private Dictionary<Item, int> Items;
     private List<Equipment> Equipment;
+    private List<PermanentItem> PermItems;
 
     // Start is called before the first frame update
     void Start()
     {
         Items = new Dictionary<Item, int>();
         Equipment = new List<Equipment>();
+        PermItems = new List<PermanentItem>();
     }
 
     public bool HasItems(Item item, int count)
@@ -22,7 +24,7 @@ public class Inventory : MonoBehaviour
     public void AddItems(Item item, int count)
     {
         // no equipment in items storage
-        if (item is Equipment)
+        if (item is Equipment || item is PermanentItem)
         {
             return;
         }
@@ -45,6 +47,19 @@ public class Inventory : MonoBehaviour
             Items.Remove(item);
         }
         return true;
+    }
+
+    public bool HasPermItem(PermanentItem item)
+    {
+        return PermItems.Contains(item);
+    }
+
+    public void AddPermItem(PermanentItem item)
+    {
+        if (!HasPermItem(item))
+        {
+            PermItems.Add(item);
+        }
     }
 
     public void AddEquipment(Equipment equipment)
