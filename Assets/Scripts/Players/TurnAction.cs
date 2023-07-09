@@ -51,7 +51,7 @@ public class TurnAction : MonoBehaviour
 
     public void Rest()
     {
-        if (Player.GetComponent<Inventory>().HasPermItem(ItemList.bed))
+        if (Player.GetComponent<Inventory>().HasPermItem(ItemList.Bed))
         {
             Player.GetComponent<Combatant>().Heal(Player.GetComponent<Combatant>().MaxHP);
         }

@@ -4,21 +4,19 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-    private Dictionary<Item, int> Items;
-    private List<Equipment> Equipment;
-    private List<PermanentItem> PermItems;
+    private readonly Dictionary<Item, int> Items = new();
+    private readonly List<Equipment> Equipment = new();
+    private readonly List<PermanentItem> PermItems = new();
 
     // Start is called before the first frame update
     void Start()
     {
-        Items = new Dictionary<Item, int>();
-        Equipment = new List<Equipment>();
-        PermItems = new List<PermanentItem>();
+        
     }
 
     public bool HasItems(Item item, int count)
     {
-        return !Items.ContainsKey(item) || Items[item] < count;
+        return ItemCount(item) >= count;
     }
 
     public void AddItems(Item item, int count)
@@ -47,6 +45,15 @@ public class Inventory : MonoBehaviour
             Items.Remove(item);
         }
         return true;
+    }
+
+    public int ItemCount(Item item)
+    {
+        if (!Items.ContainsKey(item))
+        {
+            return 0;
+        }
+        return Items[item];
     }
 
     public bool HasPermItem(PermanentItem item)
