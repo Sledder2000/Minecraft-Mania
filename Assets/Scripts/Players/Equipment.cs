@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Equipment : Item
 {
     private int MaxDurability;
-    private int Durability;
+    public int Durability { get; private set; }
     private Dictionary<Enchantment, int> Enchantments;
 
     public Equipment(string name, Sprite icon, int durability) : base(name, 2, icon)
@@ -15,14 +15,9 @@ public abstract class Equipment : Item
         Enchantments = new Dictionary<Enchantment, int>();
     }
 
-    public int GetDurability()
-    {
-        return Durability;
-    }
-
     public void ChangeDurability(int amount)
     {
         // prevents durability from going below 0 or above max
-        Durability += Mathf.Clamp(Durability + amount, 0, MaxDurability);
+        Durability = Mathf.Clamp(Durability + amount, 0, MaxDurability);
     }
 }

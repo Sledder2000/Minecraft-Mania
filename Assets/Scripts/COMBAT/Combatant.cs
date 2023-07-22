@@ -6,15 +6,15 @@ using UnityEngine;
 public class Combatant : MonoBehaviour, IComparable {
     public int HP { get; private set; }
     public int MaxHP { get; private set; }
-    public int XP { get; private set; }
-    public int Speed { get; private set; }
+    public int XP { get; private set; } = 0;
+    public int Speed { get; private set; } = 10;
     public bool IsPlayer; //{ get; private set; }
+    public bool IsAlive { get; private set; } = true;
+    public bool ActionTaken { get; private set; } = true;
     // Start is called before the first frame update
     void Start()
     {
         HP = MaxHP;
-        XP = 0;
-        Speed = 10;
         if (gameObject.GetComponent<Player>() == null)
         {
             IsPlayer = false;
@@ -36,6 +36,7 @@ public class Combatant : MonoBehaviour, IComparable {
         if (value > 0)
         {
             MaxHP = value;
+            HP = MaxHP; // might have to change later
         }
     }
 
@@ -71,7 +72,11 @@ public class Combatant : MonoBehaviour, IComparable {
     {
         if (damage > 0)
         {
-            HP -= Mathf.Max(0, HP - damage);
+            HP = Mathf.Max(0, HP - damage);
+        }
+        if (HP <= 0)
+        {
+            IsAlive = false;
         }
         // ADD DEATH CHECKING EVENT HERE
     }

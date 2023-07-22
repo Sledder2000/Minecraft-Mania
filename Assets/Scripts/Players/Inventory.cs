@@ -5,7 +5,7 @@ using UnityEngine;
 public class Inventory : MonoBehaviour
 {
     private readonly Dictionary<Item, int> Items = new();
-    private readonly List<Equipment> Equipment = new();
+    public readonly List<Equipment> Equipment = new();
     private readonly List<PermanentItem> PermItems = new();
 
     // Start is called before the first frame update
