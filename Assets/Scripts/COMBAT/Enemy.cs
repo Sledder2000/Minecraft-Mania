@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class Enemy : MonoBehaviour
 {
@@ -30,5 +31,10 @@ public abstract class Enemy : MonoBehaviour
     public Combatant GetRandomTarget()
     {
         return CC.Players[Random.Range(0, CC.Players.Count)];
+    }
+
+    public void UpdateClickedEnemy()
+    {
+        CC.EnemyClicked = gameObject.GetComponent<Combatant>();
     }
 }

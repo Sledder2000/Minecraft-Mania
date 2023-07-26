@@ -42,13 +42,13 @@ public class CombatTest : MonoBehaviour
             Debug.Log(c.gameObject.name + ": " + c.Speed);
         }
 
-        for (int i = 0; i < 10; i++)
+        /*for (int i = 0; i < 10; i++)
         {
             cc.TakeTurn();
             Debug.Log("Enemy HP: " + enemy.HP);
             cc.TakeTurn();
             Debug.Log("Player HP: " + player.HP);
-        }
+        }*/
 
 
     }

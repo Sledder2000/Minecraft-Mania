@@ -78,7 +78,6 @@ public class Combatant : MonoBehaviour, IComparable {
         {
             IsAlive = false;
         }
-        // ADD DEATH CHECKING EVENT HERE
     }
 
     public void Heal(int amount)
