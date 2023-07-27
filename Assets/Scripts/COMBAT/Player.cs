@@ -5,20 +5,29 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private CombatController CC;
-
+    public Weapon EquippedWeapon { get; private set; }
+    public Armor EquippedArmor { get; private set; }
+    public int ArrowsToUse { get; private set; }
+    private Fists fists;
     // Start is called before the first frame update
     void Start()
     {
         CC = GameObject.Find("CombatController").GetComponent<CombatController>();
+        fists = new Fists();
+        gameObject.GetComponent<Inventory>().AddEquipment(fists);
+        EquippedWeapon = fists;
+        Armor noArmor = new("No armor", null, 999999999, 0, 0.0);
+        gameObject.GetComponent<Inventory>().AddEquipment(noArmor);
+        EquippedArmor = noArmor;
+        ArrowsToUse = 0;
     }
-
     // Update is called once per frame
     void Update()
     {
 
     }
 
-    public bool AttackWithSword(Sword sword, Combatant target)
+    /*public bool AttackWithSword(Sword sword, Combatant target)
     {
         if (sword.Durability == 0) { return false; }
         DealTrueDamage(sword.Damage, target);
@@ -32,18 +41,43 @@ public class Player : MonoBehaviour
         DealTrueDamage(axe.Damage, target);
         axe.ChangeDurability(-1);
         return true;
+    }*/
+
+    public bool MeleeAttack(Combatant target)
+    {
+        if (EquippedWeapon.Durability == 0) { return false; }
+        DealTrueDamage(EquippedWeapon.Damage, target);
+        EquippedWeapon.ChangeDurability(-1);
+        EquippedWeapon = fists;
+        return true;
     }
 
-    public bool AttackWithBow(Bow bow, Combatant target, int numArrows)
+    public bool BowAttack(Combatant target, int numArrows)
     {
-        if (bow.Durability == 0 || !gameObject.GetComponent<Inventory>().HasItems(ItemList.Arrow, numArrows)) 
+        if (EquippedWeapon.Durability == 0)
         {
-            return false; 
+            return false;
         }
-        DealTrueDamage(bow.Damage * numArrows, target);
-        bow.ChangeDurability(-1 * numArrows);
+        DealTrueDamage(EquippedWeapon.Damage * numArrows, target);
+        EquippedWeapon.ChangeDurability(-1 * numArrows);
         gameObject.GetComponent<Inventory>().RemoveItems(ItemList.Arrow, numArrows);
+        EquippedWeapon = fists;
         return true;
+    }
+
+    public void ChangeEquippedWeapon(Weapon weapon)
+    {
+        if (weapon != null && weapon.Durability > 0) EquippedWeapon = weapon;
+    }
+
+    public bool SetArrowsToUse(int num)
+    {
+        if (num >= 0 && gameObject.GetComponent<Inventory>().HasItems(ItemList.Arrow, num))
+        {
+            ArrowsToUse = num;
+            return true;
+        }
+        return false;
     }
 
     public void DealTrueDamage(int damage, Combatant target)

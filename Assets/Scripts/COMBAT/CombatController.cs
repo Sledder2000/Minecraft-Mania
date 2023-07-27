@@ -11,7 +11,7 @@ public class CombatController : MonoBehaviour
     public List<Combatant> Enemies { get; private set; } = new();
     public int TurnIndex { get; private set; }
     public Combatant EnemyClicked;
-    private bool PlayerTargeting = true;
+    private bool PlayerTargeting = false;
 
     // Start is called before the first frame update
     void Start()
@@ -24,39 +24,75 @@ public class CombatController : MonoBehaviour
     {
         if (InCombat && Combatants[TurnIndex].IsPlayer)
         {
+            Player p = Combatants[TurnIndex].GetComponent<Player>();
+            Inventory i = Combatants[TurnIndex].GetComponent<Inventory>();
+
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                p.SetArrowsToUse(1);
+                Debug.Log("1 arrow");
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                p.SetArrowsToUse(2);
+                Debug.Log("2 arrows");
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                p.SetArrowsToUse(3);
+                Debug.Log("3 arrows");
+            }
+
             if (PlayerTargeting)
             {
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    EnemyClicked = null;
+                    PlayerTargeting = false;
+                }
                 Combatant e = EnemyClicked;
                 if (EnemyClicked == null) { return; }
 
-                Player p = Combatants[TurnIndex].GetComponent<Player>();
-                Inventory i = Combatants[TurnIndex].GetComponent<Inventory>();
-
-                Debug.Log("player attacking");
-
-                if (p.AttackWithSword((Sword)i.Equipment[0], e))
+                if (p.EquippedWeapon is Bow)
                 {
-                    Debug.Log("Attacking with sword");
-                }
-                else
+                    if (p.ArrowsToUse == 0) return;
+                    p.BowAttack(e, p.ArrowsToUse);
+                    Debug.Log("bow attack");
+                } else
                 {
-                    Debug.Log("Sword durability gone");
-                    if (p.AttackWithBow((Bow)i.Equipment[1], e, 1))
-                    {
-                        Debug.Log("Attacking with bow");
-                    }
-                    else
-                    {
-                        Debug.Log("No arrows left");
-                    }
+                    p.MeleeAttack(e);
+                    Debug.Log("melee attack");
                 }
+
                 Debug.Log("Enemy HP: " + e.HP);
                 EnemyClicked = null;
+                PlayerTargeting = false;
                 CheckDeaths();
                 NextTurn();
             } else
             {
-                // choose actions
+                PlayerTargeting = true;
+                if (Input.GetKeyDown(KeyCode.F))
+                {
+                    p.ChangeEquippedWeapon((Weapon)i.Equipment[0]);
+                    Debug.Log("Fists equipped");
+                }
+                else if (Input.GetKeyDown(KeyCode.S))
+                {
+                    p.ChangeEquippedWeapon((Weapon)i.Equipment[2]);
+                    Debug.Log("Sword equipped");
+
+                }
+                else if (Input.GetKeyDown(KeyCode.B))
+                {
+                    p.ChangeEquippedWeapon((Weapon)i.Equipment[3]);
+                    Debug.Log("Bow equipped");
+                }
+                else
+                {
+                    PlayerTargeting = false;
+                }
+                EnemyClicked = null;
             }
         }
     }
@@ -98,10 +134,15 @@ public class CombatController : MonoBehaviour
     {
         if (!Combatants[TurnIndex].IsPlayer) 
         {
+            Debug.Log("enemy turn");
             Combatants[TurnIndex].gameObject.GetComponent<Enemy>().Attack();
             Debug.Log("Player HP: " + Players[0].HP);
             CheckDeaths();
             if (InCombat) { NextTurn(); }
+        } 
+        else
+        {
+            Debug.Log("player turn");
         }
     }
 
@@ -126,7 +167,7 @@ public class CombatController : MonoBehaviour
         }
     }
 
-    public void EndCombat(bool PlayerWin)
+    public void EndCombat(bool playerWin)
     {
         Combatants.Clear();
         Players.Clear();
