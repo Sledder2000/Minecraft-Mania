@@ -4,14 +4,8 @@ using UnityEngine;
 
 public class CombatUIController : MonoBehaviour
 {
-    private GameObject AttackButton;
-    private GameObject ItemButton;
-    private GameObject CraftButton;
-    private GameObject RetreatButton;
-    private GameObject EndTurnButton;
-    private GameObject InventoryButton;
-    private GameObject CancelButton;
-    private GameObject ArrowsDropdown;
+    private GameObject AttackButton, ItemButton, CraftButton, RetreatButton, EndTurnButton, InventoryButton,
+        CancelButton, ArrowsDropdown, Inventory;
 
     private GameObject Buttons;
 
@@ -41,10 +35,8 @@ public class CombatUIController : MonoBehaviour
         EndTurnButton = GameObject.Find("EndTurnButton");
         InventoryButton = GameObject.Find("InventoryButton");
         CancelButton = GameObject.Find("CancelButton");
-        Debug.Log(CancelButton.activeInHierarchy);
         ArrowsDropdown = GameObject.Find("ArrowsDropdown");
-
-        ChangeState(0);
+        Inventory = GameObject.Find("InventoryView");
 
     }
 
@@ -56,6 +48,8 @@ public class CombatUIController : MonoBehaviour
 
     public void ChangeState(int state)
     {
+        Start();
+
         if (state < 0 || state > 6) { return; }
         for (int i = 0; i < Buttons.transform.childCount; i++)
         {
@@ -72,6 +66,8 @@ public class CombatUIController : MonoBehaviour
                 RetreatButton.SetActive(true);
                 EndTurnButton.SetActive(true);
                 InventoryButton.SetActive(true);
+                Inventory.SetActive(true); // change this after testing
+                Inventory.GetComponent<InventoryViewManager>().GenerateEquipmentView(CC.Combatants[CC.TurnIndex].GetComponent<Inventory>());
                 break;
             case 2:
                 CancelButton.SetActive(true);

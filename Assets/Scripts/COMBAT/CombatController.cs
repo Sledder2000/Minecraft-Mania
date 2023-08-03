@@ -28,22 +28,6 @@ public class CombatController : MonoBehaviour
             Player p = Combatants[TurnIndex].GetComponent<Player>();
             Inventory i = Combatants[TurnIndex].GetComponent<Inventory>();
 
-            /*if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                p.SetArrowsToUse(1);
-                Debug.Log("1 arrow");
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                p.SetArrowsToUse(2);
-                Debug.Log("2 arrows");
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                p.SetArrowsToUse(3);
-                Debug.Log("3 arrows");
-            }*/
-
             if (CUI.State == 2)
             {
                 if (Input.GetKeyDown(KeyCode.Return))
@@ -91,10 +75,6 @@ public class CombatController : MonoBehaviour
                 {
                     p.ChangeEquippedWeapon((Weapon)i.Equipment[3]);
                     Debug.Log("Bow equipped");
-                }
-                else
-                {
-                    CUI.ChangeState(1);
                 }
                 EnemyClicked = null;
             }

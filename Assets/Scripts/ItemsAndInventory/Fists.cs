@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Fists : Weapon
 {
-    public Fists() : base("Fists", null, 99999999)
+    public Fists() : base("Fists", GameObject.Find("ItemSprites").GetComponent<ItemSprites>().Fists, 99999999)
     {
         Damage = 5;
     }

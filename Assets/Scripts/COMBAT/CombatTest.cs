@@ -11,6 +11,7 @@ public class CombatTest : MonoBehaviour
         Combatant player = GameObject.Find("Player").GetComponent<Combatant>();
         Combatant enemy = GameObject.Find("Enemy").GetComponent<Combatant>();
         Inventory inv = GameObject.Find("Player").GetComponent<Inventory>();
+        ItemSprites isprites = GameObject.Find("ItemSprites").GetComponent<ItemSprites>();
 
         player.SetSpeed(10);
         enemy.SetSpeed(10);
@@ -31,8 +32,8 @@ public class CombatTest : MonoBehaviour
         cs.Add(enemy);
 
         inv.AddItems(ItemList.Arrow, 3);
-        inv.AddEquipment(new Sword("wood sword", null, 3, 10));
-        inv.AddEquipment(new Bow("bow", null, 5));
+        inv.AddEquipment(new Sword("wood sword", isprites.WoodSword, 3, 10));
+        inv.AddEquipment(new Bow("bow", isprites.Bow, 5));
 
 
         cc.BeginCombat(ps, es);
