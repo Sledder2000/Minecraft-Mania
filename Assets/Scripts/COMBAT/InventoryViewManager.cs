@@ -8,6 +8,7 @@ public class InventoryViewManager : MonoBehaviour
     [SerializeField] private int Width, Height;
     private Grid GridInfo;
     [SerializeField] private GameObject ItemPrefab;
+    [SerializeField] private GameObject QuantityPrefab;
     private Dictionary<Vector2, Item> Items;
     private List<GameObject> SpawnedItems;
     
@@ -42,6 +43,30 @@ public class InventoryViewManager : MonoBehaviour
             spawnedItem.GetComponent<ClickableWeapon>().Owner = inv.gameObject.GetComponent<Player>();
             SpawnedItems.Add(spawnedItem);
             Items[new Vector2(Width, Height)] = weapon;
+            count++;
+        }
+    }
+
+    public void GenerateInventoryView(Inventory inv)
+    {
+        int count = 0;
+        foreach (Item item in inv.Items.Keys)
+        {
+            float xPos = AnchorPos.x + 13.75f * (count % Width) * (GridInfo.cellSize.x + GridInfo.cellGap.x);
+            float yPos = AnchorPos.y - 13.75f * (count / Width) * (GridInfo.cellSize.y + GridInfo.cellGap.y);
+            var spawnedItem = Instantiate(ItemPrefab, new Vector2(xPos, yPos), Quaternion.identity);
+            spawnedItem.transform.localScale *= 14;
+            spawnedItem.GetComponent<SpriteRenderer>().sprite = item.Icon;
+            spawnedItem.GetComponent<ClickableWeapon>().clickable = false;
+            SpawnedItems.Add(spawnedItem);
+            Items[new Vector2(Width, Height)] = item;
+
+            if (inv.ItemCount(item) > 1)
+            {
+                var quantityIndicator = Instantiate(QuantityPrefab, new Vector2(1.02f * xPos + 15, yPos - 5), Quaternion.identity, GameObject.Find("Canvas").transform);
+                quantityIndicator.GetComponent<TMPro.TMP_Text>().text = "" + inv.ItemCount(item);
+                SpawnedItems.Add(quantityIndicator);
+            }
             count++;
         }
     }

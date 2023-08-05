@@ -74,7 +74,7 @@ public class CombatUIController : MonoBehaviour
             case 3:
                 CancelButton.SetActive(true);
                 Inventory.SetActive(true);
-                Inventory.GetComponent<InventoryViewManager>().GenerateEquipmentView(CC.Combatants[CC.TurnIndex].GetComponent<Inventory>());
+                Inventory.GetComponent<InventoryViewManager>().GenerateEquipmentView(CC.GetActivePlayer().GetComponent<Inventory>());
                 BattleInfo.SetActive(true);
                 BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Choose a weapon";
                 break;
@@ -82,6 +82,8 @@ public class CombatUIController : MonoBehaviour
                 CancelButton.SetActive(true);
                 break;
             case 5:
+                Inventory.SetActive(true);
+                Inventory.GetComponent<InventoryViewManager>().GenerateInventoryView(CC.GetActivePlayer().GetComponent<Inventory>());
                 CancelButton.SetActive(true);
                 break;
             case 6:
@@ -89,12 +91,12 @@ public class CombatUIController : MonoBehaviour
                 ArrowsDropdown.SetActive(true);
                 ConfirmArrows.SetActive(true);
                 BattleInfo.SetActive(true);
-                ArrowsDropdown.GetComponent<ArrowsDropdown>().SetCurrentPlayer(CC.Combatants[CC.TurnIndex].gameObject.GetComponent<Player>());
+                ArrowsDropdown.GetComponent<ArrowsDropdown>().SetCurrentPlayer(CC.GetActivePlayer());
                 ArrowsDropdown.GetComponent<TMPro.TMP_Dropdown>().value = 0;
                 BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Select number of arrows";
                 break;
         }
-        if (state != 3) { Inventory.GetComponent<InventoryViewManager>().RemoveSpawnedItems(); }
+        if (state != 3 && state != 5) { Inventory.GetComponent<InventoryViewManager>().RemoveSpawnedItems(); }
         State = state;
     }
 }

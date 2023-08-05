@@ -36,6 +36,17 @@ public class CombatTest : MonoBehaviour
         inv.AddEquipment(new Sword("wood sword", isprites.WoodSword, 3, 10));
         inv.AddEquipment(new Bow("bow", isprites.Bow, 5));
 
+        inv.AddItems(ItemList.Stone, 2);
+        inv.AddItems(ItemList.Emerald, 3);
+        inv.AddItems(ItemList.Gold, 5);
+        inv.AddItems(ItemList.Wood, 12);
+        inv.AddItems(ItemList.Diamond, 1);
+        inv.AddItems(ItemList.Iron, 9);
+        inv.AddItems(ItemList.RottenFlesh, 9);
+        inv.AddItems(ItemList.Redstone, 9);
+        inv.AddItems(ItemList.Netherite, 9);
+
+
 
         /*for (int i = 0; i < 10; i++)
         {

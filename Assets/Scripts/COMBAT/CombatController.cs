@@ -12,12 +12,14 @@ public class CombatController : MonoBehaviour
     public List<Combatant> Enemies { get; private set; } = new();
     public int TurnIndex { get; private set; }
     public Combatant EnemyClicked;
+    private Button AttackButton;
     //private bool PlayerTargeting = false;
 
     // Start is called before the first frame update
     void Start()
     {
         CUI = GameObject.Find("CombatUIController").GetComponent<CombatUIController>();
+        AttackButton = GameObject.Find("AttackButton").GetComponent<Button>();
     }
 
     // Update is called once per frame
@@ -26,16 +28,10 @@ public class CombatController : MonoBehaviour
         if (InCombat && Combatants[TurnIndex].IsPlayer)
         {
             Player p = Combatants[TurnIndex].GetComponent<Player>();
-            Inventory i = Combatants[TurnIndex].GetComponent<Inventory>();
 
             if (CUI.State == 2)
             {
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    EnemyClicked = null;
-                    CUI.ChangeState(1);
-                    ToggleEnemiesClickable(false);
-                }
+                ToggleEnemiesClickable(true);
                 Combatant e = EnemyClicked;
                 if (EnemyClicked == null) { return; }
 
@@ -55,10 +51,9 @@ public class CombatController : MonoBehaviour
                 CUI.ChangeState(1);
                 ToggleEnemiesClickable(false);
                 CheckDeaths();
-                NextTurn();
+                AttackButton.interactable = false;
             } else
             {
-                ToggleEnemiesClickable(true);
                 EnemyClicked = null;
             }
         }
@@ -80,10 +75,11 @@ public class CombatController : MonoBehaviour
         }
         Combatants.Sort();
         TurnIndex = 0;
+        ToggleEnemiesClickable(false);
         TakeTurn();
     } 
 
-    private void NextTurn()
+    public void NextTurn()
     {
         if (!InCombat) { return; }
         do
@@ -107,6 +103,7 @@ public class CombatController : MonoBehaviour
             Combatants[TurnIndex].gameObject.GetComponent<Enemy>().Attack();
             Debug.Log("Player HP: " + Players[0].HP);
             CheckDeaths();
+            AttackButton.interactable = true;
             if (InCombat) { NextTurn(); }
         } 
         else
@@ -150,7 +147,13 @@ public class CombatController : MonoBehaviour
     {
         foreach (Combatant enemy in Enemies)
         {
-            enemy.gameObject.GetComponent<Button>().enabled = state;
+            enemy.gameObject.GetComponent<Button>().interactable = state;
         }
+    }
+
+    public Player GetActivePlayer()
+    {
+        if (Combatants[TurnIndex].IsPlayer) { return Combatants[TurnIndex].gameObject.GetComponent<Player>(); }
+        return null;
     }
 }

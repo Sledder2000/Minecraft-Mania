@@ -7,6 +7,7 @@ public class ClickableWeapon : MonoBehaviour
     private CombatUIController CUI;
     public Weapon Wpn;
     public Player Owner;
+    public bool clickable;
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +22,7 @@ public class ClickableWeapon : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (Owner.ChangeEquippedWeapon(Wpn)) 
+        if (clickable && Owner.ChangeEquippedWeapon(Wpn))
         {
             if (Owner.EquippedWeapon is Bow) {
                 Owner.SetArrowsToUse(1);
