@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class InventoryViewManager : MonoBehaviour
 {
-    [SerializeField] private Vector2 AnchorPos;
+    private Vector2 AnchorPos;
     [SerializeField] private int Width, Height;
     private Grid GridInfo;
     [SerializeField] private GameObject ItemPrefab;
     private Dictionary<Vector2, Item> Items;
+    private List<GameObject> SpawnedItems;
     
     // Start is called before the first frame update
     void Start()
     {
         GridInfo = gameObject.GetComponent<Grid>();
         Items = new Dictionary<Vector2, Item>();
+        SpawnedItems = new List<GameObject>();
+        AnchorPos = new Vector2(gameObject.transform.position.x - 6 * Width * GridInfo.cellSize.x - 28, 
+            gameObject.transform.position.y + 6 * Height * GridInfo.cellSize.y - 11);
     }
 
     // Update is called once per frame
@@ -34,8 +38,20 @@ public class InventoryViewManager : MonoBehaviour
             var spawnedItem = Instantiate(ItemPrefab, new Vector2(xPos, yPos), Quaternion.identity);
             spawnedItem.transform.localScale *= 14;
             spawnedItem.GetComponent<SpriteRenderer>().sprite = weapon.Icon;
+            spawnedItem.GetComponent<ClickableWeapon>().Wpn = (Weapon)weapon;
+            spawnedItem.GetComponent<ClickableWeapon>().Owner = inv.gameObject.GetComponent<Player>();
+            SpawnedItems.Add(spawnedItem);
             Items[new Vector2(Width, Height)] = weapon;
             count++;
         }
+    }
+
+    public void RemoveSpawnedItems()
+    {
+        foreach (GameObject item in SpawnedItems)
+        {
+            Destroy(item);
+        }
+        SpawnedItems.Clear();
     }
 }

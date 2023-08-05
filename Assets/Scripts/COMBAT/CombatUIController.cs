@@ -5,7 +5,7 @@ using UnityEngine;
 public class CombatUIController : MonoBehaviour
 {
     private GameObject AttackButton, ItemButton, CraftButton, RetreatButton, EndTurnButton, InventoryButton,
-        CancelButton, ArrowsDropdown, Inventory;
+        CancelButton, ArrowsDropdown, ConfirmArrows, Inventory, BattleInfo;
 
     private GameObject Buttons;
 
@@ -36,20 +36,19 @@ public class CombatUIController : MonoBehaviour
         InventoryButton = GameObject.Find("InventoryButton");
         CancelButton = GameObject.Find("CancelButton");
         ArrowsDropdown = GameObject.Find("ArrowsDropdown");
+        ConfirmArrows = GameObject.Find("ConfirmArrows");
         Inventory = GameObject.Find("InventoryView");
-
+        BattleInfo = GameObject.Find("BattleInfo");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+       
     }
 
     public void ChangeState(int state)
     {
-        Start();
-
         if (state < 0 || state > 6) { return; }
         for (int i = 0; i < Buttons.transform.childCount; i++)
         {
@@ -66,14 +65,18 @@ public class CombatUIController : MonoBehaviour
                 RetreatButton.SetActive(true);
                 EndTurnButton.SetActive(true);
                 InventoryButton.SetActive(true);
-                Inventory.SetActive(true); // change this after testing
-                Inventory.GetComponent<InventoryViewManager>().GenerateEquipmentView(CC.Combatants[CC.TurnIndex].GetComponent<Inventory>());
                 break;
             case 2:
                 CancelButton.SetActive(true);
+                BattleInfo.SetActive(true);
+                BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Choose a target";
                 break;
             case 3:
                 CancelButton.SetActive(true);
+                Inventory.SetActive(true);
+                Inventory.GetComponent<InventoryViewManager>().GenerateEquipmentView(CC.Combatants[CC.TurnIndex].GetComponent<Inventory>());
+                BattleInfo.SetActive(true);
+                BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Choose a weapon";
                 break;
             case 4:
                 CancelButton.SetActive(true);
@@ -84,8 +87,14 @@ public class CombatUIController : MonoBehaviour
             case 6:
                 CancelButton.SetActive(true);
                 ArrowsDropdown.SetActive(true);
+                ConfirmArrows.SetActive(true);
+                BattleInfo.SetActive(true);
+                ArrowsDropdown.GetComponent<ArrowsDropdown>().SetCurrentPlayer(CC.Combatants[CC.TurnIndex].gameObject.GetComponent<Player>());
+                ArrowsDropdown.GetComponent<TMPro.TMP_Dropdown>().value = 0;
+                BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Select number of arrows";
                 break;
         }
+        if (state != 3) { Inventory.GetComponent<InventoryViewManager>().RemoveSpawnedItems(); }
         State = state;
     }
 }

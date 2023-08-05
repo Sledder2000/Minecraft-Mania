@@ -59,23 +59,6 @@ public class CombatController : MonoBehaviour
             } else
             {
                 ToggleEnemiesClickable(true);
-                //CUI.ChangeState(2);
-                if (Input.GetKeyDown(KeyCode.F))
-                {
-                    p.ChangeEquippedWeapon((Weapon)i.Equipment[0]);
-                    Debug.Log("Fists equipped");
-                }
-                else if (Input.GetKeyDown(KeyCode.S))
-                {
-                    p.ChangeEquippedWeapon((Weapon)i.Equipment[2]);
-                    Debug.Log("Sword equipped");
-
-                }
-                else if (Input.GetKeyDown(KeyCode.B))
-                {
-                    p.ChangeEquippedWeapon((Weapon)i.Equipment[3]);
-                    Debug.Log("Bow equipped");
-                }
                 EnemyClicked = null;
             }
         }
@@ -102,6 +85,7 @@ public class CombatController : MonoBehaviour
 
     private void NextTurn()
     {
+        if (!InCombat) { return; }
         do
         {
             if (TurnIndex == Combatants.Count - 1)
@@ -159,6 +143,7 @@ public class CombatController : MonoBehaviour
         Players.Clear();
         Enemies.Clear();
         InCombat = false;
+        CUI.ChangeState(0);
     }
 
     private void ToggleEnemiesClickable(bool state)

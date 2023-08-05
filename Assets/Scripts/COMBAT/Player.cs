@@ -65,9 +65,14 @@ public class Player : MonoBehaviour
         return true;
     }
 
-    public void ChangeEquippedWeapon(Weapon weapon)
+    public bool ChangeEquippedWeapon(Weapon weapon)
     {
-        if (weapon != null && weapon.Durability > 0) EquippedWeapon = weapon;
+        if (weapon != null && weapon.Durability > 0)
+        {
+            EquippedWeapon = weapon;
+            return true;
+        }
+        return false;
     }
 
     public bool SetArrowsToUse(int num)
