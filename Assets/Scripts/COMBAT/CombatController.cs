@@ -71,7 +71,6 @@ public class CombatController : MonoBehaviour
         foreach (Combatant e in enemies)
         {
             Combatants.Add(e);
-            //e.gameObject.GetComponent<Button>().onClick.AddListener(UpdateEnemyClicked);
         }
         Combatants.Sort();
         TurnIndex = 0;
@@ -147,7 +146,7 @@ public class CombatController : MonoBehaviour
     {
         foreach (Combatant enemy in Enemies)
         {
-            enemy.gameObject.GetComponent<Button>().interactable = state;
+            enemy.gameObject.GetComponent<Enemy>().Clickable = state;
         }
     }
 

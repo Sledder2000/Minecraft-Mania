@@ -9,6 +9,8 @@ public abstract class Enemy : MonoBehaviour
     public int XPDropped { get; protected set; }
     public string Name { get; protected set; }
 
+    public bool Clickable = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,5 +38,10 @@ public abstract class Enemy : MonoBehaviour
     public void UpdateClickedEnemy()
     {
         CC.EnemyClicked = gameObject.GetComponent<Combatant>();
+    }
+
+    private void OnMouseDown()
+    {
+        if (Clickable) { CC.EnemyClicked = gameObject.GetComponent<Combatant>(); }
     }
 }

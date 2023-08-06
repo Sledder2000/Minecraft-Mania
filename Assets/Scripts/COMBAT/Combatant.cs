@@ -11,10 +11,12 @@ public class Combatant : MonoBehaviour, IComparable {
     public bool IsPlayer; //{ get; private set; }
     public bool IsAlive { get; private set; } = true;
     public bool ActionTaken { get; private set; } = true;
+    public Healthbar HPBar;
     // Start is called before the first frame update
     void Start()
     {
         HP = MaxHP;
+        HPBar = gameObject.GetComponentInChildren<Healthbar>();
         if (gameObject.GetComponent<Player>() == null)
         {
             IsPlayer = false;
@@ -37,6 +39,7 @@ public class Combatant : MonoBehaviour, IComparable {
         {
             MaxHP = value;
             HP = MaxHP; // might have to change later
+            HPBar.UpdateHealthbar();
         }
     }
 
@@ -78,6 +81,7 @@ public class Combatant : MonoBehaviour, IComparable {
         {
             IsAlive = false;
         }
+        HPBar.UpdateHealthbar();
     }
 
     public void Heal(int amount)
@@ -85,6 +89,7 @@ public class Combatant : MonoBehaviour, IComparable {
         if (amount > 0)
         {
             HP = Mathf.Min(MaxHP, HP + amount);
+            HPBar.UpdateHealthbar();
         }
     }
 

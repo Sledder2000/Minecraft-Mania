@@ -11,7 +11,11 @@ public class ItemSprites : MonoBehaviour
     public Sprite Stone;
     public Sprite Iron;
     public Sprite Gold;
+    public Sprite Redstone;
     public Sprite Diamond;
     public Sprite Emerald;
+    public Sprite Netherite;
+
     public Sprite Arrow;
+    public Sprite RottenFlesh;
 }
