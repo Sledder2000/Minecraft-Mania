@@ -36,11 +36,12 @@ public class InventoryViewManager : MonoBehaviour
             if (!(weapon is Weapon)) { continue; }
             float xPos = AnchorPos.x + 13.75f * (count % Width) * (GridInfo.cellSize.x + GridInfo.cellGap.x);
             float yPos = AnchorPos.y - 13.75f * (count / Width) * (GridInfo.cellSize.y + GridInfo.cellGap.y);
-            var spawnedItem = Instantiate(ItemPrefab, new Vector2(xPos, yPos), Quaternion.identity);
-            spawnedItem.transform.localScale *= 14;
+            var spawnedItem = Instantiate(ItemPrefab, new Vector2(xPos, yPos), Quaternion.identity, GameObject.Find("Canvas").transform);
             spawnedItem.GetComponent<SpriteRenderer>().sprite = weapon.Icon;
             spawnedItem.GetComponent<ClickableWeapon>().Wpn = (Weapon)weapon;
             spawnedItem.GetComponent<ClickableWeapon>().Owner = inv.gameObject.GetComponent<Player>();
+            spawnedItem.transform.Find("DurabilityBar").gameObject.GetComponent<DurabilityBar>().AttachedTo = weapon;
+            if (weapon.GetName() == "Fists") { spawnedItem.transform.Find("DurabilityBar").gameObject.SetActive(false); }
             SpawnedItems.Add(spawnedItem);
             Items[new Vector2(Width, Height)] = weapon;
             count++;
@@ -58,6 +59,7 @@ public class InventoryViewManager : MonoBehaviour
             spawnedItem.transform.localScale *= 14;
             spawnedItem.GetComponent<SpriteRenderer>().sprite = item.Icon;
             spawnedItem.GetComponent<ClickableWeapon>().clickable = false;
+            spawnedItem.transform.Find("DurabilityBar").gameObject.SetActive(false);
             SpawnedItems.Add(spawnedItem);
             Items[new Vector2(Width, Height)] = item;
 

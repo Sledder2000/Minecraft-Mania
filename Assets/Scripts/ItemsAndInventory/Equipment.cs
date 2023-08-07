@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Equipment : Item
 {
-    private int MaxDurability;
+    public int MaxDurability { get; private set; }
     public int Durability { get; private set; }
     private Dictionary<Enchantment, int> Enchantments;
 
