@@ -12,6 +12,7 @@ public class Combatant : MonoBehaviour, IComparable {
     public bool IsAlive { get; private set; } = true;
     public bool ActionTaken { get; private set; } = true;
     public Healthbar HPBar;
+    private DamageIndicatorManager DIM;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +26,7 @@ public class Combatant : MonoBehaviour, IComparable {
         {
             IsPlayer = true;
         }
+        DIM = GameObject.Find("DamageIndicatorManager").GetComponent<DamageIndicatorManager>();
     }
 
     // Update is called once per frame
@@ -82,6 +84,7 @@ public class Combatant : MonoBehaviour, IComparable {
             IsAlive = false;
         }
         HPBar.UpdateHealthbar();
+        DIM.IndicateDamage(damage, gameObject.transform.position, false);
     }
 
     public void Heal(int amount)
@@ -91,6 +94,7 @@ public class Combatant : MonoBehaviour, IComparable {
             HP = Mathf.Min(MaxHP, HP + amount);
             HPBar.UpdateHealthbar();
         }
+        DIM.IndicateDamage(amount, gameObject.transform.position, true);
     }
 
     public int CompareTo(object other)
