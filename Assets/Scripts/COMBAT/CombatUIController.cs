@@ -20,6 +20,7 @@ public class CombatUIController : MonoBehaviour
      * 4 = view items
      * 5 = view inventory
      * 6 = arrow selection
+     * 7 = enemy attack
      **/
 
     // Start is called before the first frame update
@@ -49,7 +50,7 @@ public class CombatUIController : MonoBehaviour
 
     public void ChangeState(int state)
     {
-        if (state < 0 || state > 6) { return; }
+        if (state < 0 || state > 7) { return; }
         for (int i = 0; i < Buttons.transform.childCount; i++)
         {
             Buttons.transform.GetChild(i).gameObject.SetActive(false);
@@ -94,6 +95,9 @@ public class CombatUIController : MonoBehaviour
                 ArrowsDropdown.GetComponent<ArrowsDropdown>().SetCurrentPlayer(CC.GetActivePlayer());
                 ArrowsDropdown.GetComponent<TMPro.TMP_Dropdown>().value = 0;
                 BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Select number of arrows";
+                break;
+            case 7:
+                BattleInfo.SetActive(true);
                 break;
         }
         if (state != 3 && state != 5) { Inventory.GetComponent<InventoryViewManager>().RemoveSpawnedItems(); }

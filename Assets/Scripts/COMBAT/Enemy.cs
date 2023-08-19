@@ -11,6 +11,10 @@ public abstract class Enemy : MonoBehaviour
 
     public bool Clickable = false;
 
+    public string CurrentAttack { get; protected set; }
+    public string CurrentAttackText { get; protected set; }
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +27,11 @@ public abstract class Enemy : MonoBehaviour
         
     }
 
-    public abstract void Attack();
+    public abstract void ChooseAttack();
+    public void Attack()
+    {
+        Invoke(CurrentAttack, 0);
+    }
 
     public void DealTrueDamage(int damage, Combatant target)
     {

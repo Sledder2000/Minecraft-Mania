@@ -11,17 +11,21 @@ public class Zombie : Enemy
         XPDropped = 1;
     }
 
-    public override void Attack()
+    public override void ChooseAttack()
     {
         int rng = Random.Range(1, 100);
         if (rng <= 60)
         {
-            Punch();
-        } else
+            CurrentAttack = nameof(Punch);
+            CurrentAttackText = "Punch";
+        }
+        else
         {
-            DrainingBite();
+            CurrentAttack = nameof(DrainingBite);
+            CurrentAttackText = "Draining Bite";
         }
     }
+
 
     private void Punch()
     {

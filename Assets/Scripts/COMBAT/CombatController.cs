@@ -13,6 +13,8 @@ public class CombatController : MonoBehaviour
     public int TurnIndex { get; private set; }
     public Combatant EnemyClicked;
     private Button AttackButton;
+    public float AttackDelayTimer { get; private set; }
+    private TMPro.TMP_Text BattleInfoText;
     //private bool PlayerTargeting = false;
 
     // Start is called before the first frame update
@@ -20,6 +22,8 @@ public class CombatController : MonoBehaviour
     {
         CUI = GameObject.Find("CombatUIController").GetComponent<CombatUIController>();
         AttackButton = GameObject.Find("AttackButton").GetComponent<Button>();
+        AttackDelayTimer = 1.5f;
+        BattleInfoText = GameObject.Find("BattleInfoText").GetComponent<TMPro.TMP_Text>();
     }
 
     // Update is called once per frame
@@ -35,6 +39,15 @@ public class CombatController : MonoBehaviour
                 Combatant e = EnemyClicked;
                 if (EnemyClicked == null) { return; }
 
+                if (p.EquippedWeapon is Bow) { BattleInfoText.text = "Attack (" + p.EquippedWeapon.GetName() + ", " + p.ArrowsToUse + " arrows)"; }
+                else { BattleInfoText.text = "Attack (" + p.EquippedWeapon.GetName() + ")"; }
+
+                if (AttackDelayTimer > 0)
+                {
+                    AttackDelayTimer -= Time.deltaTime;
+                    return;
+                }
+
                 if (p.EquippedWeapon is Bow)
                 {
                     if (p.ArrowsToUse == 0) return;
@@ -48,6 +61,7 @@ public class CombatController : MonoBehaviour
 
                 Debug.Log("Enemy HP: " + e.HP);
                 EnemyClicked = null;
+                AttackDelayTimer = 1.5f;
                 CUI.ChangeState(1);
                 ToggleEnemiesClickable(false);
                 CheckDeaths();
@@ -97,13 +111,9 @@ public class CombatController : MonoBehaviour
     {
         if (!Combatants[TurnIndex].IsPlayer) 
         {
-            CUI.ChangeState(0);
+            CUI.ChangeState(7);
             Debug.Log("enemy turn");
-            Combatants[TurnIndex].gameObject.GetComponent<Enemy>().Attack();
-            Debug.Log("Player HP: " + Players[0].HP);
-            CheckDeaths();
-            AttackButton.interactable = true;
-            if (InCombat) { NextTurn(); }
+            StartCoroutine(nameof(EnemyAttack));
         } 
         else
         {
@@ -154,5 +164,29 @@ public class CombatController : MonoBehaviour
     {
         if (Combatants[TurnIndex].IsPlayer) { return Combatants[TurnIndex].gameObject.GetComponent<Player>(); }
         return null;
+    }
+
+    public void SetAttackDelay(float delay)
+    {
+        if (delay < 0) { return; }
+        AttackDelayTimer = delay;
+    }
+
+    private IEnumerator EnemyAttack()
+    {
+        Enemy e = Combatants[TurnIndex].gameObject.GetComponent<Enemy>();
+        e.ChooseAttack();
+        BattleInfoText.text = e.CurrentAttackText;
+        while (AttackDelayTimer > 0)
+        {
+            AttackDelayTimer -= Time.deltaTime;
+            yield return null;
+        }
+        e.Attack();
+        Debug.Log("Player HP: " + Players[0].HP);
+        CheckDeaths();
+        AttackButton.interactable = true;
+        AttackDelayTimer = 1.5f;
+        if (InCombat) { NextTurn(); }
     }
 }
