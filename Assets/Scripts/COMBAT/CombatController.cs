@@ -15,6 +15,7 @@ public class CombatController : MonoBehaviour
     private Button AttackButton;
     public float AttackDelayTimer { get; private set; }
     private TMPro.TMP_Text BattleInfoText;
+    private const float ATTACK_DELAY = 0.8f;
     //private bool PlayerTargeting = false;
 
     // Start is called before the first frame update
@@ -22,7 +23,7 @@ public class CombatController : MonoBehaviour
     {
         CUI = GameObject.Find("CombatUIController").GetComponent<CombatUIController>();
         AttackButton = GameObject.Find("AttackButton").GetComponent<Button>();
-        AttackDelayTimer = 1.5f;
+        AttackDelayTimer = ATTACK_DELAY;
         BattleInfoText = GameObject.Find("BattleInfoText").GetComponent<TMPro.TMP_Text>();
     }
 
@@ -37,10 +38,19 @@ public class CombatController : MonoBehaviour
             {
                 ToggleEnemiesClickable(true);
                 Combatant e = EnemyClicked;
-                if (EnemyClicked == null) { return; }
+                if (EnemyClicked == null) return;
 
-                if (p.EquippedWeapon is Bow) { BattleInfoText.text = "Attack (" + p.EquippedWeapon.GetName() + ", " + p.ArrowsToUse + " arrows)"; }
-                else { BattleInfoText.text = "Attack (" + p.EquippedWeapon.GetName() + ")"; }
+                if (AttackDelayTimer == ATTACK_DELAY)
+                {
+                    if (p.EquippedWeapon is Bow) {
+                        BattleInfoText.text = "Attack (" + p.EquippedWeapon.GetName() + ", " + p.ArrowsToUse + " arrow";
+                        if (p.ArrowsToUse == 1) { BattleInfoText.text += ")"; }
+                        else { BattleInfoText.text += "s)"; }
+                    }
+                    else { BattleInfoText.text = "Attack (" + p.EquippedWeapon.GetName() + ")"; }
+                    p.GetComponent<Combatant>().StartAttackAnimation();
+                }
+
 
                 if (AttackDelayTimer > 0)
                 {
@@ -52,16 +62,13 @@ public class CombatController : MonoBehaviour
                 {
                     if (p.ArrowsToUse == 0) return;
                     p.BowAttack(e, p.ArrowsToUse);
-                    Debug.Log("bow attack");
                 } else
                 {
                     p.MeleeAttack(e);
-                    Debug.Log("melee attack");
                 }
 
-                Debug.Log("Enemy HP: " + e.HP);
                 EnemyClicked = null;
-                AttackDelayTimer = 1.5f;
+                AttackDelayTimer = ATTACK_DELAY;
                 CUI.ChangeState(1);
                 ToggleEnemiesClickable(false);
                 CheckDeaths();
@@ -89,8 +96,8 @@ public class CombatController : MonoBehaviour
         Combatants.Sort();
         TurnIndex = 0;
         ToggleEnemiesClickable(false);
-        TakeTurn();
-    } 
+        StartCoroutine(nameof(TakeTurn));
+    }
 
     public void NextTurn()
     {
@@ -104,25 +111,27 @@ public class CombatController : MonoBehaviour
             TurnIndex++;
         }
         while (!Combatants[TurnIndex].IsAlive);
-        TakeTurn();
+        StartCoroutine(nameof(TakeTurn));
     }
 
-    public void TakeTurn()
+    private IEnumerator TakeTurn()
     {
-        if (!Combatants[TurnIndex].IsPlayer) 
+        CUI.ChangeState(0);
+        yield return new WaitForSecondsRealtime(0.4f);
+
+        if (!Combatants[TurnIndex].IsPlayer)
         {
             CUI.ChangeState(7);
-            Debug.Log("enemy turn");
             StartCoroutine(nameof(EnemyAttack));
         } 
         else
         {
             CUI.ChangeState(1);
-            Debug.Log("player turn");
+            AttackButton.interactable = true;
         }
     }
 
-    public void CheckDeaths()
+    public bool CheckDeaths()
     {
         bool playersAlive = false;
         bool enemiesAlive = false;
@@ -132,6 +141,11 @@ public class CombatController : MonoBehaviour
             {
                 if (c.IsPlayer) { playersAlive = true; }
                 else { enemiesAlive = true; }
+            } else
+            {
+                Players.Remove(c);
+                Enemies.Remove(c);
+                c.gameObject.SetActive(false);
             }
         }
         if (!playersAlive)
@@ -141,6 +155,7 @@ public class CombatController : MonoBehaviour
         {
             EndCombat(true);
         }
+        return true;
     }
 
     public void EndCombat(bool playerWin)
@@ -166,16 +181,17 @@ public class CombatController : MonoBehaviour
         return null;
     }
 
-    public void SetAttackDelay(float delay)
+/*    public void SetAttackDelay(float delay)
     {
         if (delay < 0) { return; }
         AttackDelayTimer = delay;
-    }
+    }*/
 
     private IEnumerator EnemyAttack()
     {
         Enemy e = Combatants[TurnIndex].gameObject.GetComponent<Enemy>();
         e.ChooseAttack();
+        e.GetComponent<Combatant>().StartAttackAnimation();
         BattleInfoText.text = e.CurrentAttackText;
         while (AttackDelayTimer > 0)
         {
@@ -183,10 +199,8 @@ public class CombatController : MonoBehaviour
             yield return null;
         }
         e.Attack();
-        Debug.Log("Player HP: " + Players[0].HP);
-        CheckDeaths();
-        AttackButton.interactable = true;
-        AttackDelayTimer = 1.5f;
+        AttackDelayTimer = ATTACK_DELAY;
+        yield return new WaitUntil(CheckDeaths);
         if (InCombat) { NextTurn(); }
     }
 }

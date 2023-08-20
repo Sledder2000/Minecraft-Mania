@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
 
     public bool ChangeEquippedWeapon(Weapon weapon)
     {
-        if (weapon != null && weapon.Durability > 0)
+        if (weapon != null && weapon.Durability > 0 && (!(weapon is Bow) || GetComponent<Inventory>().ItemCount(ItemList.Arrow) > 0))
         {
             EquippedWeapon = weapon;
             return true;
@@ -77,9 +77,9 @@ public class Player : MonoBehaviour
 
     public bool SetArrowsToUse(int num)
     {
-        if (num >= 0 && gameObject.GetComponent<Inventory>().HasItems(ItemList.Arrow, num))
+        if (num >= 0)
         {
-            ArrowsToUse = num;
+            ArrowsToUse = Mathf.Min(num, gameObject.GetComponent<Inventory>().ItemCount(ItemList.Arrow));
             return true;
         }
         return false;

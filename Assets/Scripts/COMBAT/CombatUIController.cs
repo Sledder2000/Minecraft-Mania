@@ -66,6 +66,8 @@ public class CombatUIController : MonoBehaviour
                 RetreatButton.SetActive(true);
                 EndTurnButton.SetActive(true);
                 InventoryButton.SetActive(true);
+                BattleInfo.SetActive(true);
+                BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = CC.GetActivePlayer().name + "'s turn";
                 break;
             case 2:
                 CancelButton.SetActive(true);
@@ -94,7 +96,8 @@ public class CombatUIController : MonoBehaviour
                 BattleInfo.SetActive(true);
                 ArrowsDropdown.GetComponent<ArrowsDropdown>().SetCurrentPlayer(CC.GetActivePlayer());
                 ArrowsDropdown.GetComponent<TMPro.TMP_Dropdown>().value = 0;
-                BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Select number of arrows";
+                BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = 
+                    "Select number of arrows (you have " + CC.GetActivePlayer().GetComponent<Inventory>().ItemCount(ItemList.Arrow) + ")";
                 break;
             case 7:
                 BattleInfo.SetActive(true);

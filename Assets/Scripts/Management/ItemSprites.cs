@@ -5,8 +5,10 @@ using UnityEngine;
 public class ItemSprites : MonoBehaviour
 {
     public Sprite WoodSword;
+    public Sprite IronAxe;
     public Sprite Bow;
     public Sprite Fists;
+
     public Sprite Wood;
     public Sprite Stone;
     public Sprite Iron;

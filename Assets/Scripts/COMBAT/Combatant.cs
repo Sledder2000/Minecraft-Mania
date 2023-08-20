@@ -9,7 +9,7 @@ public class Combatant : MonoBehaviour, IComparable {
     public int XP { get; private set; } = 0;
     public int Speed { get; private set; } = 10;
     public bool IsPlayer; //{ get; private set; }
-    public bool IsAlive { get; private set; } = true;
+    public bool IsAlive /*{ get; private set; }*/ = true;
     public bool ActionTaken { get; private set; } = true;
     public Healthbar HPBar;
     private DamageIndicatorManager DIM;
@@ -81,7 +81,9 @@ public class Combatant : MonoBehaviour, IComparable {
         }
         if (HP <= 0)
         {
+            Debug.Log("DEAD");
             IsAlive = false;
+            gameObject.SetActive(false);
         }
         HPBar.UpdateHealthbar();
         DIM.IndicateDamage(damage, gameObject.transform.position, false);
@@ -110,5 +112,27 @@ public class Combatant : MonoBehaviour, IComparable {
             if (otherCombatant.IsPlayer && !this.IsPlayer) { return 1; }
         }
         return otherCombatant.Speed - this.Speed;
+    }
+
+
+    public void StartAttackAnimation()
+    {
+        StartCoroutine(nameof(AttackAnimation));
+    }
+    private IEnumerator AttackAnimation()
+    {
+        Vector3 pos = gameObject.transform.position;
+        Vector3 newPos = new(pos.x, pos.y + 5, 0);
+        for (int i = 0; i < 6; i++)
+        {
+            if (i % 2 == 0)
+            {
+                gameObject.transform.position = newPos;
+            } else
+            {
+                gameObject.transform.position = pos;
+            }
+            yield return new WaitForSecondsRealtime(0.05f);
+        }
     }
 }
