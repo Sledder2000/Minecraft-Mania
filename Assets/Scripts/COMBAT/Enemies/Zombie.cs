@@ -30,11 +30,13 @@ public class Zombie : Enemy
     private void Punch()
     {
         DealTrueDamage(8, GetRandomTarget());
+        AttackFinished = true;
     }
 
     private void DrainingBite()
     {
         DealTrueDamage(6, GetRandomTarget());
         gameObject.GetComponent<Combatant>().Heal(6);
+        AttackFinished = true;
     }
 }

@@ -13,7 +13,6 @@ public class Healthbar : MonoBehaviour
         AttachedTo = gameObject.transform.parent.GetComponent<Combatant>();
         HPIndicator = gameObject.transform.Find("HPIndicator").gameObject;
         HPText = gameObject.transform.Find("HPText").GetComponent<TMPro.TMP_Text>();
-        UpdateHealthbar();
     }
 
     // Update is called once per frame

@@ -205,6 +205,7 @@ public class CombatController : MonoBehaviour
         }
         e.Attack();
         AttackDelayTimer = ATTACK_DELAY;
+        yield return new WaitUntil(() => e.AttackFinished);
         yield return new WaitUntil(CheckDeaths);
         if (InCombat) { NextTurn(); }
     }
