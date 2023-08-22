@@ -10,7 +10,6 @@ public class ItemSpriteTest : MonoBehaviour
         ItemSprites isprites = GameObject.Find("ItemSprites").GetComponent<ItemSprites>();
 
         Sprite sword = isprites.WoodSword;
-        Debug.Log(sword.name);
     }
 
     // Update is called once per frame

@@ -16,8 +16,8 @@ public class Combatant : MonoBehaviour, IComparable {
     // Start is called before the first frame update
     void Start()
     {
-        HP = MaxHP;
-        HPBar = gameObject.GetComponentInChildren<Healthbar>();
+        HP = 10;
+        HPBar = gameObject.transform.Find("Healthbar").GetComponent<Healthbar>();
         if (gameObject.GetComponent<Player>() == null)
         {
             IsPlayer = false;

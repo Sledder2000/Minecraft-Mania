@@ -37,7 +37,14 @@ public class InventoryViewManager : MonoBehaviour
             float xPos = AnchorPos.x + 13.75f * (count % Width) * (GridInfo.cellSize.x + GridInfo.cellGap.x);
             float yPos = AnchorPos.y - 13.75f * (count / Width) * (GridInfo.cellSize.y + GridInfo.cellGap.y);
             var spawnedItem = Instantiate(ItemPrefab, new Vector2(xPos, yPos), Quaternion.identity, GameObject.Find("Canvas").transform);
-            spawnedItem.GetComponent<SpriteRenderer>().sprite = weapon.Icon;
+
+            SpriteRenderer sprite = spawnedItem.GetComponent<SpriteRenderer>();
+            sprite.sprite = weapon.Icon;
+
+            if ((weapon is Bow && inv.ItemCount(ItemList.Arrow) == 0) || (weapon is Axe && inv.gameObject.GetComponent<Player>().AxeCooldown > 0)) {
+                sprite.color = new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.5f);
+            }
+
             spawnedItem.GetComponent<ClickableWeapon>().Wpn = (Weapon)weapon;
             spawnedItem.GetComponent<ClickableWeapon>().Owner = inv.gameObject.GetComponent<Player>();
             spawnedItem.transform.Find("DurabilityBar").gameObject.GetComponent<DurabilityBar>().AttachedTo = weapon;

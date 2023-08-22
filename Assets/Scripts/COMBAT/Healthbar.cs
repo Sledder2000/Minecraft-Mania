@@ -8,7 +8,7 @@ public class Healthbar : MonoBehaviour
     private GameObject HPIndicator;
     private TMPro.TMP_Text HPText;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         AttachedTo = gameObject.transform.parent.GetComponent<Combatant>();
         HPIndicator = gameObject.transform.Find("HPIndicator").gameObject;

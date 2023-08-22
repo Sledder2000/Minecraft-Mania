@@ -13,6 +13,7 @@ public class CombatController : MonoBehaviour
     public int TurnIndex { get; private set; }
     public Combatant EnemyClicked;
     private Button AttackButton;
+    private Button RetreatButton;
     public float AttackDelayTimer { get; private set; }
     private TMPro.TMP_Text BattleInfoText;
     private const float ATTACK_DELAY = 0.8f;
@@ -23,6 +24,7 @@ public class CombatController : MonoBehaviour
     {
         CUI = GameObject.Find("CombatUIController").GetComponent<CombatUIController>();
         AttackButton = GameObject.Find("AttackButton").GetComponent<Button>();
+        RetreatButton = GameObject.Find("RetreatButton").GetComponent<Button>();
         AttackDelayTimer = ATTACK_DELAY;
         BattleInfoText = GameObject.Find("BattleInfoText").GetComponent<TMPro.TMP_Text>();
     }
@@ -62,9 +64,15 @@ public class CombatController : MonoBehaviour
                 {
                     if (p.ArrowsToUse == 0) return;
                     p.BowAttack(e, p.ArrowsToUse);
+                } else if (p.EquippedWeapon is Sword)
+                {
+                    p.SwordAttack(e);
+                } else if (p.EquippedWeapon is Axe)
+                {
+                    p.AxeAttack(e);
                 } else
                 {
-                    p.MeleeAttack(e);
+                    p.FistAttack(e);
                 }
 
                 EnemyClicked = null;
@@ -82,7 +90,6 @@ public class CombatController : MonoBehaviour
 
     public void BeginCombat(List<Combatant> players, List<Combatant> enemies)
     {
-        InCombat = true;
         Players = players;
         Enemies = enemies;
         foreach (Combatant p in players)
@@ -96,6 +103,7 @@ public class CombatController : MonoBehaviour
         Combatants.Sort();
         TurnIndex = 0;
         ToggleEnemiesClickable(false);
+        InCombat = true;
         StartCoroutine(nameof(TakeTurn));
     }
 
@@ -119,15 +127,17 @@ public class CombatController : MonoBehaviour
         CUI.ChangeState(0);
         yield return new WaitForSecondsRealtime(0.4f);
 
-        if (!Combatants[TurnIndex].IsPlayer)
+        if (Combatants[TurnIndex].IsPlayer)
+        {
+            if (GetActivePlayer().AxeCooldown > 0) GetActivePlayer().AxeCooldown--;
+            CUI.ChangeState(1);
+            AttackButton.interactable = true;
+            RetreatButton.interactable = true;
+        }
+        else
         {
             CUI.ChangeState(7);
             StartCoroutine(nameof(EnemyAttack));
-        } 
-        else
-        {
-            CUI.ChangeState(1);
-            AttackButton.interactable = true;
         }
     }
 
@@ -181,11 +191,6 @@ public class CombatController : MonoBehaviour
         return null;
     }
 
-/*    public void SetAttackDelay(float delay)
-    {
-        if (delay < 0) { return; }
-        AttackDelayTimer = delay;
-    }*/
 
     private IEnumerator EnemyAttack()
     {
@@ -202,5 +207,48 @@ public class CombatController : MonoBehaviour
         AttackDelayTimer = ATTACK_DELAY;
         yield return new WaitUntil(CheckDeaths);
         if (InCombat) { NextTurn(); }
+    }
+
+    public void Retreat()
+    {
+        if (GetActivePlayer() != null) {
+            CUI.ChangeState(8);
+            StartCoroutine(nameof(RetreatAnimation));
+        }
+    }
+
+    private IEnumerator RetreatAnimation()
+    {
+        yield return new WaitForSeconds(1);
+        if (Random.Range(1, 20) >= 10 + MaxEnemySpeed() - Combatants[TurnIndex].Speed)
+        {
+            BattleInfoText.text = "You successfully retreated!";
+            yield return new WaitForSeconds(1);
+            EndCombat(true); // if you run away you dont get loot
+            yield break;
+        } else
+        {
+            BattleInfoText.text = "You couldn't get away!";
+            yield return new WaitForSeconds(1);
+        }
+        CUI.ChangeState(1);
+    }
+
+    private int MaxEnemySpeed()
+    {
+        int maxSpeed = 0;
+        foreach (Combatant c in Enemies)
+        {
+            maxSpeed = Mathf.Max(maxSpeed, c.Speed);
+        }
+        return maxSpeed;
+    }
+
+    public void ShowHealthbars(bool enabled)
+    {
+        foreach (Combatant c in Combatants)
+        {
+            c.gameObject.transform.Find("Healthbar").gameObject.SetActive(enabled);
+        }
     }
 }

@@ -21,6 +21,7 @@ public class CombatUIController : MonoBehaviour
      * 5 = view inventory
      * 6 = arrow selection
      * 7 = enemy attack
+     * 8 = retreating
      **/
 
     // Start is called before the first frame update
@@ -50,7 +51,7 @@ public class CombatUIController : MonoBehaviour
 
     public void ChangeState(int state)
     {
-        if (state < 0 || state > 7) { return; }
+        //if (state < 0 || state > 8) { return; }
         for (int i = 0; i < Buttons.transform.childCount; i++)
         {
             Buttons.transform.GetChild(i).gameObject.SetActive(false);
@@ -73,6 +74,7 @@ public class CombatUIController : MonoBehaviour
                 CancelButton.SetActive(true);
                 BattleInfo.SetActive(true);
                 BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Choose a target";
+                CC.ShowHealthbars(true);
                 break;
             case 3:
                 CancelButton.SetActive(true);
@@ -101,6 +103,10 @@ public class CombatUIController : MonoBehaviour
                 break;
             case 7:
                 BattleInfo.SetActive(true);
+                break;
+            case 8:
+                BattleInfo.SetActive(true);
+                BattleInfo.transform.GetChild(0).GetComponent<TMPro.TextMeshProUGUI>().text = "Attempting to flee...";
                 break;
         }
         if (state != 3 && state != 5) { Inventory.GetComponent<InventoryViewManager>().RemoveSpawnedItems(); }

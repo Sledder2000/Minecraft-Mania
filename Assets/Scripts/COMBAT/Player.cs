@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public Armor EquippedArmor { get; private set; }
     public int ArrowsToUse { get; private set; }
     private Fists fists;
+    public int AxeCooldown;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +21,7 @@ public class Player : MonoBehaviour
         gameObject.GetComponent<Inventory>().AddEquipment(noArmor);
         EquippedArmor = noArmor;
         ArrowsToUse = 0;
+        AxeCooldown = 0;
     }
     // Update is called once per frame
     void Update()
@@ -27,28 +29,31 @@ public class Player : MonoBehaviour
 
     }
 
-    /*public bool AttackWithSword(Sword sword, Combatant target)
+    public bool SwordAttack(Combatant target)
     {
-        if (sword.Durability == 0) { return false; }
-        DealTrueDamage(sword.Damage, target);
-        sword.ChangeDurability(-1);
+        if (EquippedWeapon.Durability == 0) { return false; }
+        foreach (Combatant enemy in CC.Enemies)
+        {
+            if (enemy.Equals(target))
+            {
+                DealTrueDamage(EquippedWeapon.Damage, enemy);
+            } else
+            {
+                DealTrueDamage(EquippedWeapon.Damage / 5, enemy);
+            }
+        }
+        EquippedWeapon.ChangeDurability(-1);
+        EquippedWeapon = fists;
         return true;
     }
 
-    public bool AttackWithAxe(Axe axe, Combatant target)
-    {
-        if (axe.Durability == 0) { return false; }
-        DealTrueDamage(axe.Damage, target);
-        axe.ChangeDurability(-1);
-        return true;
-    }*/
-
-    public bool MeleeAttack(Combatant target)
+    public bool AxeAttack(Combatant target)
     {
         if (EquippedWeapon.Durability == 0) { return false; }
         DealTrueDamage(EquippedWeapon.Damage, target);
         EquippedWeapon.ChangeDurability(-1);
         EquippedWeapon = fists;
+        AxeCooldown = 2;
         return true;
     }
 
@@ -65,9 +70,15 @@ public class Player : MonoBehaviour
         return true;
     }
 
+    public void FistAttack(Combatant target)
+    {
+        DealTrueDamage(EquippedWeapon.Damage, target);
+        EquippedWeapon = fists;
+    }
+
     public bool ChangeEquippedWeapon(Weapon weapon)
     {
-        if (weapon != null && weapon.Durability > 0 && (!(weapon is Bow) || GetComponent<Inventory>().ItemCount(ItemList.Arrow) > 0))
+        if (weapon != null && weapon.Durability > 0 && !(weapon is Axe && AxeCooldown != 0) && (!(weapon is Bow) || GetComponent<Inventory>().ItemCount(ItemList.Arrow) > 0))
         {
             EquippedWeapon = weapon;
             return true;
@@ -89,4 +100,5 @@ public class Player : MonoBehaviour
     {
         target.TakeTrueDamage(damage);
     }
+
 }
