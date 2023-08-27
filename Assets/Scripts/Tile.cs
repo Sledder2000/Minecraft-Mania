@@ -20,6 +20,7 @@ public class Tile : MonoBehaviour
     public Sprite Desert;
     public Sprite Jungle;
     public Sprite Plains;
+    public Sprite Fog;
 
     //private Vector3 scaleChange = new Vector3((float)1.25, (float)1.25, 1);
     public void Start()
@@ -31,32 +32,20 @@ public class Tile : MonoBehaviour
 
         Biome = "Mountains";
         //Sets terrain to Biome type
-        if (Biome.Equals("Plains")) {
-            this.GetComponent<SpriteRenderer>().sprite = Plains;
-        }  else if (Biome.Equals("Ocean"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = Ocean;
-        }  else if (Biome.Equals("Forest"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = Forest;
-        }  else if (Biome.Equals("SnowyForest"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = SnowyForest;
-        }  else if (Biome.Equals("Mountains"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = Mountains;
-        }  else if (Biome.Equals("Volcano"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = Volcano;
-        }  else if (Biome.Equals("Desert"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = Desert;
-        }  else if (Biome.Equals("Jungle"))
-        {
-            this.GetComponent<SpriteRenderer>().sprite = Jungle;
-        }  
+        RenderSprite(Biome);  
 
 
+    }
+
+    public void Update()
+    {
+        if (!IsFlipped) 
+        { 
+            this.GetComponent<SpriteRenderer>().sprite = Fog;
+        } else 
+        {
+            RenderSprite(Biome);
+        }
     }
 
     public void SetDifficulty(int difficulty) {  Difficulty = difficulty; }
@@ -67,5 +56,39 @@ public class Tile : MonoBehaviour
 
     public void SetBiome(string biome) {  Biome = biome; }
 
-    
+    public void RenderSprite(string Biome)
+    {
+        if (Biome.Equals("Plains"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Plains;
+        }
+        else if (Biome.Equals("Ocean"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Ocean;
+        }
+        else if (Biome.Equals("Forest"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Forest;
+        }
+        else if (Biome.Equals("SnowyForest"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = SnowyForest;
+        }
+        else if (Biome.Equals("Mountains"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Mountains;
+        }
+        else if (Biome.Equals("Volcano"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Volcano;
+        }
+        else if (Biome.Equals("Desert"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Desert;
+        }
+        else if (Biome.Equals("Jungle"))
+        {
+            this.GetComponent<SpriteRenderer>().sprite = Jungle;
+        }
+    }
 }

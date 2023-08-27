@@ -180,6 +180,7 @@ MonoBehaviour:
   Desert: {fileID: 21300000, guid: 87c7040ad207a684bac935f806313e07, type: 3}
   Jungle: {fileID: 21300000, guid: e2e66902c768ff34b9e8637f06b1a595, type: 3}
   Plains: {fileID: 21300000, guid: da3e6bbb84c179140bc2ea270b6958bd, type: 3}
+  Fog: {fileID: 21300000, guid: 6aef1e4ea7deb1f4dad56f3d615b4901, type: 3}
 --- !u!212 &47416060
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -220,7 +221,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: da3e6bbb84c179140bc2ea270b6958bd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -389,6 +390,7 @@ MonoBehaviour:
   Desert: {fileID: 21300000, guid: 87c7040ad207a684bac935f806313e07, type: 3}
   Jungle: {fileID: 21300000, guid: e2e66902c768ff34b9e8637f06b1a595, type: 3}
   Plains: {fileID: 21300000, guid: da3e6bbb84c179140bc2ea270b6958bd, type: 3}
+  Fog: {fileID: 21300000, guid: 6aef1e4ea7deb1f4dad56f3d615b4901, type: 3}
 --- !u!1 &294929791
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,6 +448,7 @@ MonoBehaviour:
   Desert: {fileID: 21300000, guid: 87c7040ad207a684bac935f806313e07, type: 3}
   Jungle: {fileID: 21300000, guid: e2e66902c768ff34b9e8637f06b1a595, type: 3}
   Plains: {fileID: 21300000, guid: da3e6bbb84c179140bc2ea270b6958bd, type: 3}
+  Fog: {fileID: 21300000, guid: 6aef1e4ea7deb1f4dad56f3d615b4901, type: 3}
 --- !u!212 &294929794
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -652,7 +655,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -736,6 +739,7 @@ MonoBehaviour:
   Desert: {fileID: 21300000, guid: 87c7040ad207a684bac935f806313e07, type: 3}
   Jungle: {fileID: 21300000, guid: e2e66902c768ff34b9e8637f06b1a595, type: 3}
   Plains: {fileID: 21300000, guid: da3e6bbb84c179140bc2ea270b6958bd, type: 3}
+  Fog: {fileID: 21300000, guid: 6aef1e4ea7deb1f4dad56f3d615b4901, type: 3}
 --- !u!212 &688500401
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -845,6 +849,7 @@ MonoBehaviour:
   Desert: {fileID: 21300000, guid: 87c7040ad207a684bac935f806313e07, type: 3}
   Jungle: {fileID: 21300000, guid: e2e66902c768ff34b9e8637f06b1a595, type: 3}
   Plains: {fileID: 21300000, guid: da3e6bbb84c179140bc2ea270b6958bd, type: 3}
+  Fog: {fileID: 21300000, guid: 6aef1e4ea7deb1f4dad56f3d615b4901, type: 3}
 --- !u!212 &2080413695
 SpriteRenderer:
   m_ObjectHideFlags: 0
